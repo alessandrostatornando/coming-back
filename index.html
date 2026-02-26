@@ -2098,20 +2098,21 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
       background-position: center;
       transform: scale(1.03);
       filter: saturate(1.05) contrast(1.05);
-      z-index: -3;
+      z-index: -2;
     }
 
     /* Aurora */
     .aurora {
       position: fixed;
       inset: -20%;
-      z-index: -2;
+      z-index: -3;
       background:
-        radial-gradient(closest-side at 15% 25%, rgba(88, 255, 214, 0.22), transparent 60%),
-        radial-gradient(closest-side at 75% 20%, rgba(129, 118, 255, 0.22), transparent 55%),
-        radial-gradient(closest-side at 60% 80%, rgba(255, 116, 170, 0.18), transparent 55%),
-        radial-gradient(closest-side at 25% 85%, rgba(255, 230, 135, 0.14), transparent 60%);
-      filter: blur(30px);
+      radial-gradient(closest-side at 15% 25%, rgba(88, 255, 214, 0.55), transparent 60%),
+      radial-gradient(closest-side at 75% 20%, rgba(129, 118, 255, 0.55), transparent 55%),
+      radial-gradient(closest-side at 60% 80%, rgba(255, 116, 170, 0.45), transparent 55%),
+      radial-gradient(closest-side at 25% 85%, rgba(255, 230, 135, 0.35), transparent 60%);
+
+      filter: blur(22px) saturate(1.6) contrast(1.25);
       animation: floaty 14s ease-in-out infinite alternate;
       opacity: 1;
       transform-origin: center;
@@ -2311,21 +2312,24 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
       }
     }
 
-    /* cuoricino */
-    .heart{
+    /* emoji */
+    .pulseEmoji{
       display:inline-block;
       font-size:14px;
       line-height:1;
-      color:rgba(255, 120, 150, 0.95);
-      animation: heartbeat 1.6s ease-in-out infinite;
+      margin-right:6px;
       transform-origin:center;
+      animation: emojiPulse 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.18));
     }
 
-    @keyframes heartbeat{
-      0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.15); }
-      40% { transform: scale(0.95); }
-      60% { transform: scale(1.08); }
+    @keyframes emojiPulse{
+      0%, 100% { transform: scale(1); opacity: 0.88; }
+      50%      { transform: scale(1.18); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .pulseEmoji{ animation: none; }
     }
 
     /* fumetto */
@@ -2414,7 +2418,7 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
     <div class="card">
       <div class="topbar">
         <div class="pill">
-          <span class="heart" aria-hidden="true">❤️</span>
+          <span id="pulseEmoji" class="pulseEmoji" aria-hidden="true">✨</span>
           <span id="statusText">Tranquilli, sto tornando e manca poco.</span>
 
           <!-- STAR -->
@@ -2424,7 +2428,7 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
           </span>
         </div>
 
-        <button id="refreshBgBtn" type="button">Cambia sfondo!</button>
+        <button id="refreshBgBtn" type="button">Bottone Magico</button>
       </div>
 
       <h1>Tranquilli, sto tornando e manca poco.</h1>
@@ -2473,7 +2477,7 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
         const warn = document.createElement("div");
         warn.id = "integrityBanner";
         warn.className = "integrityBanner";
-        warn.textContent = "⚠ Integrity check failed: date modified";
+        warn.textContent = "Integrity check failed: date modified";
         document.body.appendChild(warn);
       }
       return false;
@@ -2489,13 +2493,18 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
     bg.style.backgroundImage = `url("https://picsum.photos/1800/1200?ts=${Date.now()}")`;
   }
   setRandomBackground();
-  refreshBtn.addEventListener("click", setRandomBackground);
+  refreshBtn.addEventListener("click", () => {
+    pickEmoji();
+    pickStarMessage();
+    setRandomBackground();
+  });
 
   const starWrap = document.getElementById("starWrap");
   function closeStar(){ starWrap.classList.remove("open"); }
 
   starWrap.addEventListener("click", (e) => {
     e.stopPropagation();
+    pickStarMessage();          // nuova frase
     starWrap.classList.toggle("open");
   });
   starWrap.addEventListener("keydown", (e) => {
@@ -2508,7 +2517,49 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeStar();
   });
+  const emojiEl = document.getElementById("pulseEmoji");
+  const EMOJIS = [
+  "❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎",
+  "💖","💗","💘","💝","💞","💕","💓","💟","❣️",
+  "✨","🌟","⭐","💫","⚡","🔥","💥","🌈","🪄",
+  "🌙","🌚","🌝","🌛","🌜","☀️","🌤️","⛅","🌌",
+  "🎉","🎊","🎈","🎆","🎇","🥳","👏","🙌","🫶",
+  "🚀","🛸","🛰️","🎯","🏆","🥇","🎖️","👑",
+  "😼","😎","🤓","🧐","😏","😌","🤍","🫠","🫡",
+  "🌸","🌺","🌻","🌼","🍀","🌿","🌹","🪷",
+  "💎","🪙","🔮","🧿","🕯️","🪐",
+  "🎵","🎶","🎧","🎤","🎬","📀",
+  "🧠","💡","🔋","🧨","🛸",
+  "🦋","🐉","🦄","🐺","🐾",
+  "☁️","🌊","❄️","🌋","🌪️",
+  "🧸","🎁","🍭","🍓","🍒",
+  "🫀","🫶","🫂","💌",
+  "📡","🖤","🪄","🫧","🪩"
+];
+const STAR_MESSAGES = [
+  "Tu sei una stella più bella!",
+  "Sei più stella della stella!",
+  "Dalle stalle alle stelle!",
+  "Sono a studiare tabelle!",
+  "Sarò abbastanza tabello per fare colpo sulle tabelle?",
+  "Stella fa rima con tabella!",
+  "Stelle fa rima con tabelle!"
+];
+const starBubble = document.getElementById("starBubble");
 
+function pickStarMessage(){
+  starBubble.textContent =
+    STAR_MESSAGES[Math.floor(Math.random() * STAR_MESSAGES.length)];
+}
+
+  function pickEmoji(){
+    emojiEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+  }
+
+pickEmoji();
+
+const CHANGE_EVERY_MS = 30 * 60 * 1000;
+if (CHANGE_EVERY_MS > 0) setInterval(pickEmoji, CHANGE_EVERY_MS);
   // Progress
   const fill = document.getElementById("fill");
   const pct  = document.getElementById("pct");
