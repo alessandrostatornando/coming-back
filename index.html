@@ -2055,40 +2055,274 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
 NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!
 --->
 <!--OK LO STAI GUARDANDO, VA BENE, PECCATO. TI ROVINI LA SORPRESA.-->
+
 <html lang="it">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Arrivo tra</title>
+  <title>Tranquilli, sto tornando e manca poco.</title>
+
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
-    .bar { width: 100%; height: 22px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
-    .fill { height: 100%; width: 0%; background: #333; transition: width 0.5s linear; }
-    .row { display: flex; justify-content: space-between; margin-top: 10px; }
-    code { background: #f2f2f2; padding: 2px 6px; border-radius: 4px; }
+    :root{
+      --card-bg: rgba(255,255,255,0.12);
+      --card-border: rgba(255,255,255,0.22);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --shadow: rgba(0,0,0,0.30);
+      --bar-bg: rgba(255,255,255,0.16);
+      --bar-fill: rgba(255,255,255,0.78);
+      --btn-bg: rgba(255,255,255,0.10);
+      --btn-border: rgba(255,255,255,0.18);
+      --btn-bg-hover: rgba(255,255,255,0.16);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      overflow-x: hidden;
+      background: #0b0f18;
+    }
+
+    /* Background */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.03);
+      filter: saturate(1.05) contrast(1.05);
+      z-index: -3;
+    }
+
+    /* Aurora */
+    .aurora {
+      position: fixed;
+      inset: -20%;
+      z-index: -2;
+      background:
+        radial-gradient(closest-side at 15% 25%, rgba(88, 255, 214, 0.22), transparent 60%),
+        radial-gradient(closest-side at 75% 20%, rgba(129, 118, 255, 0.22), transparent 55%),
+        radial-gradient(closest-side at 60% 80%, rgba(255, 116, 170, 0.18), transparent 55%),
+        radial-gradient(closest-side at 25% 85%, rgba(255, 230, 135, 0.14), transparent 60%);
+      filter: blur(30px);
+      animation: floaty 14s ease-in-out infinite alternate;
+      opacity: 1;
+      transform-origin: center;
+    }
+    @keyframes floaty {
+      from { transform: translate3d(-2%, -1%, 0) rotate(-2deg) scale(1.02); }
+      to   { transform: translate3d( 2%,  1%, 0) rotate( 2deg) scale(1.06); }
+    }
+
+    /* Dark overlay for readability */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(0,0,0,0.25), transparent 60%),
+        radial-gradient(900px 500px at 80% 90%, rgba(0,0,0,0.35), transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,0.40), rgba(0,0,0,0.62));
+      z-index: -1;
+    }
+
+    .wrap {
+      width: min(780px, 92vw);
+      padding: 28px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      box-shadow: 0 14px 40px var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      opacity: 0.9;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: background 0.15s ease;
+    }
+    button:hover { background: var(--btn-bg-hover); }
+    button:active { transform: translateY(1px); }
+    button:focus { outline: 2px solid rgba(255,255,255,0.22); outline-offset: 2px; }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(24px, 3.2vw, 34px);
+      letter-spacing: 0.2px;
+      font-weight: 700;
+    }
+
+    .sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .bar {
+      height: 14px;
+      width: 100%;
+      background: var(--bar-bg);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: var(--bar-fill);
+      border-radius: 999px;
+      transition: width 0.35s linear;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .kpi {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.2px;
+    }
+
+    .final {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      display: none;
+    }
+
+    a {
+      color: rgba(255,255,255,0.92);
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,0.45);
+      word-break: break-word;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+    }
   </style>
 </head>
+
 <body>
-  <h1>Tranquilli, sto tornando e manca poco</h1>
-  <div class="bar"><div id="fill" class="fill"></div></div>
-  <div class="row">
-    <div id="pct">0.00%</div>
-    <div id="rem">—</div>
+
+  <div id="bg" class="bg"></div>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <div class="pill">
+          <span class="dot"></span>
+          <span id="statusText">Tracking…</span>
+        </div>
+
+        <button id="refreshBgBtn" type="button">Refresh background</button>
+      </div>
+
+      <h1>Tranquilli, sto tornando e manca poco</h1>
+
+      <div class="bar" aria-label="progress bar">
+        <div id="fill" class="fill"></div>
+      </div>
+
+      <div class="row">
+        <div>Siamo già a: <span id="pct" class="kpi">0.00%</span></div>
+        <div>Mancano solo: <span id="rem" class="kpi">—</span></div>
+      </div>
+
+      <div id="final" class="final">
+        <div class="kpi">APRI IL LINK!</div>
+        <div style="margin-top:8px;">
+          <a id="finalLink" href="#" rel="noopener">link</a>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <p id="final" style="margin-top:16px; font-weight:600;"></p>
-  <img src="https://picsum.photos/800/600"
-     style="width:100%; height:auto; border-radius:10px; margin:20px 0;">
 
 <script>
+  // START: 2026-02-26 00:00 Europe/Rome => 2026-02-25 23:00:00Z (CET)
+  // END:   2026-08-31 23:59:59 Europe/Rome => 2026-08-31 21:59:59Z (CEST)
 
-  const START = Date.parse("2026-02-25T23:00:00Z");
-  const END   = Date.parse("2026-08-31T21:59:59Z");
+  // SE CAMBI LE DATE A CASO, TIPO METTENDO LA END DATE INFERIORE ALLA START, LO SCRIPT SI ROMPE. NON METTO CONTROLLI DI INTEGRITY CHECK. E NON FA NEANCHE RIDERE.
+  const START = Date.parse("2026-02-25 23:00:00Z");
+  const END   = Date.parse("2026-08-31 21:59:59Z");
   const FINAL_LINK = "https://youtu.be/DipzMtLBggc?si=kQwdFKT75JH1JKBI&t=80";
+
+  const bg = document.getElementById("bg");
+  const refreshBtn = document.getElementById("refreshBgBtn");
+
+  function setRandomBackground(){
+  
+    bg.style.backgroundImage = `url("https://picsum.photos/1800/1200?ts=${Date.now()}")`;
+  }
+
+  setRandomBackground();
+  refreshBtn.addEventListener("click", setRandomBackground);
 
   const fill = document.getElementById("fill");
   const pct  = document.getElementById("pct");
   const rem  = document.getElementById("rem");
   const fin  = document.getElementById("final");
+  const finA = document.getElementById("finalLink");
+  const statusText = document.getElementById("statusText");
 
   function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
 
@@ -2107,17 +2341,23 @@ NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SORGENTE!!NON ISPEZIONARE IL SOR
     const total = END - START;
     const prog = clamp((now - START) / total, 0, 1);
 
-    fill.style.width = (prog*100).toFixed(2) + "%";
-    pct.textContent = (prog*100).toFixed(2) + "%";
-    rem.textContent = "remaining " + fmtRemaining(END - now);
+    fill.style.width = (prog * 100).toFixed(2) + "%";
+    pct.textContent = (prog * 100).toFixed(2) + "%";
+    rem.textContent = fmtRemaining(END - now);
 
     if (prog >= 1){
-      fin.innerHTML = `ECCOLO!! <a href="${FINAL_LINK}">${FINAL_LINK}</a>`;
+      statusText.textContent = "Completato!";
+      fin.style.display = "block";
+      finA.href = FINAL_LINK;
+      finA.textContent = FINAL_LINK;
+    } else if (now < START) {
+      statusText.textContent = "Non ancora partito!";
+      fin.style.display = "none";
     } else {
-      fin.textContent = "";
+      statusText.textContent = "Guarda come va veloce";
+      fin.style.display = "none";
     }
   }
-  
 
   tick();
   setInterval(tick, 1000);
